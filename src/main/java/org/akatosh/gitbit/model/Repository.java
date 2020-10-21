@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class Repository {
     private int id;
 

@@ -2,6 +2,7 @@ package org.akatosh.gitbit.model;
 
 import com.google.gson.annotations.SerializedName;
 
+@SuppressWarnings("unused")
 public class User {
     private int id;
 
