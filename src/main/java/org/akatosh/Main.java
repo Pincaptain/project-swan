@@ -1,15 +1,19 @@
 package org.akatosh;
 
-import org.akatosh.simul.manager.EntityManager;
-import org.akatosh.simul.model.exception.UnpopulatedSimulationException;
+import org.akatosh.gitbit.model.Repository;
+import org.akatosh.gitbit.service.GithubService;
+
+import java.io.IOException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        EntityManager manager = new EntityManager();
-        manager.populate(3623);
+        GithubService service = new GithubService("https://api.github.com/");
+
         try {
-            manager.simulate();
-        } catch (UnpopulatedSimulationException e) {
+            List<Repository> repositories = service.getRepositories("Pincaptain");
+            System.out.println(repositories.get(0).getId());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
