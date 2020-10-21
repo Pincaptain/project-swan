@@ -4,12 +4,12 @@ import org.akatosh.gitbit.model.Repository;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
-import retrofit2.http.Url;
+import retrofit2.http.Path;
 
 import java.util.List;
 
 public interface GithubClient {
-    @GET
+    @GET("users/{user}/repos")
     @Headers("accept: application/json")
-    Call<List<Repository>> getRepositories(@Url String url);
+    Call<List<Repository>> getRepositories(@Path(value = "user", encoded = true) String user);
 }

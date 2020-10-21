@@ -6,6 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 public class GithubService {
@@ -21,10 +22,52 @@ public class GithubService {
     }
 
     public List<Repository> getRepositories(String user) throws IOException {
-        String url = String.format("users/%s/repos", user);
-
-        return client.getRepositories(url)
+        return client.getRepositories(user)
                 .execute()
                 .body();
+    }
+
+    public Repository getStaleRepository(String user) throws IOException {
+        List<Repository> repositories = getRepositories(user);
+
+        if (repositories == null || repositories.isEmpty()) {
+            return null;
+        }
+
+        return repositories.stream()
+                .reduce(repositories.get(0), (x, y) -> x.getUpdatedAt().before(y.getUpdatedAt()) ? x : y);
+    }
+
+    public Repository getFreshRepository(String user) throws IOException {
+        List<Repository> repositories = getRepositories(user);
+
+        if (repositories == null || repositories.isEmpty()) {
+            return null;
+        }
+
+        return repositories.stream()
+                .reduce(repositories.get(0), (x, y) -> x.getUpdatedAt().after(y.getUpdatedAt()) ? x : y);
+    }
+
+    public Repository getOldestRepository(String user) throws IOException {
+        List<Repository> repositories = getRepositories(user);
+
+        if (repositories == null || repositories.isEmpty()) {
+            return null;
+        }
+
+        return repositories.stream()
+                .reduce(repositories.get(0), (x, y) -> x.getCreatedAt().before(y.getCreatedAt()) ? x : y);
+    }
+
+    public Repository getNewestRepository(String user) throws IOException {
+        List<Repository> repositories = getRepositories(user);
+
+        if (repositories == null || repositories.isEmpty()) {
+            return null;
+        }
+
+        return repositories.stream()
+                .reduce(repositories.get(0), (x, y) -> x.getCreatedAt().after(y.getCreatedAt()) ? x : y);
     }
 }
